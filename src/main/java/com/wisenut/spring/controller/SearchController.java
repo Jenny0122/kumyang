@@ -17,7 +17,7 @@ public class SearchController {
 
     private final SearchService service;
 
-    // "입력받은 검색어와 컬렉션 정보로 통합검색
+    // 입력받은 검색어와 컬렉션 정보로 통합검색
     @PostMapping(path = {"/search"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> retriveSearchList(@RequestBody @Valid TotalSearchRequestDTO requestDTO) {
 

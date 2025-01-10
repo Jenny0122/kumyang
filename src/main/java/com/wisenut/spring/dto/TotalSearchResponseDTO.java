@@ -16,4 +16,6 @@ public class TotalSearchResponseDTO {
 
     SearchVo<Board> Board;
 
+    SearchVo<Appr> Appr;
+
 }
