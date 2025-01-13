@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Slf4j
@@ -107,9 +106,6 @@ public class SearchService {
 
         log.debug("prefix query: {}", prefixQuery);
 
-        if(!prefixQuery.isEmpty())
-            ret = search.w3SetPrefixQuery(COLLECTION, prefixQuery, 1);
-
         // 검색 기간 설정
         if (modifyTo != null & modifyFrom != null) {
             ret = search.w3SetDateRange(COLLECTION,
@@ -125,21 +121,21 @@ public class SearchService {
 
         switch (COLLECTION) {
             case "ALL":
-                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, SORT_FIELD, RESULT_COUNT, PAGE_START), BOARD);
+                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, prefixQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), BOARD);
                 dto.setBoard(boardSearch);
 
-                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, SORT_FIELD, RESULT_COUNT, PAGE_START), APPR);
+                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, prefixQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), APPR);
                 dto.setAppr(apprSearch);
 
                 break;
 
             case "board":
-                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, SORT_FIELD, RESULT_COUNT, PAGE_START), BOARD);
+                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, prefixQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), BOARD);
                 dto.setBoard(boardSearch);
                 break;
 
             case "appr":
-                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, SORT_FIELD, RESULT_COUNT, PAGE_START), APPR);
+                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, prefixQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), APPR);
                 dto.setAppr(apprSearch);
                 break;
 
@@ -147,10 +143,10 @@ public class SearchService {
                 break;
         }
 
-        return null;
+        return dto;
     }
 
-    private Search searchBoard(Search search, String COLLECTION, String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
+    private Search searchBoard(Search search, String COLLECTION, String prefixQuery, String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
 
         int ret = 0;
         String SEARCH_FIELD = null;
@@ -158,6 +154,7 @@ public class SearchService {
 
         SEARCH_FIELD = getBoardSearchFieldList();
         DOCUMENT_FIELD = getBoardDocumentFieldList();
+
 
         // collection, 검색 필드, 출력 필드 설정
         ret = search.w3AddCollection(COLLECTION);
@@ -168,6 +165,9 @@ public class SearchService {
         ret = search.w3SetHighlight(COLLECTION, 1, 1);
         ret = search.w3SetRanking(COLLECTION, "basic", "prkmfo", 1000);
         ret = search.w3SetQueryAnalyzer(COLLECTION, 1, 1, 1, 0);
+
+        if(!prefixQuery.isEmpty())
+            ret = search.w3SetPrefixQuery(COLLECTION, prefixQuery, 1);
 
         // request
         ret = search.w3ConnectServer(SERVER_IP, SERVER_PORT, SERVER_TIMEOUT);
@@ -183,7 +183,7 @@ public class SearchService {
 
     }
 
-    private Search searchAppr(Search search, String COLLECTION, String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
+    private Search searchAppr(Search search, String COLLECTION, String prefixQuery,String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
 
         int ret = 0;
         String SEARCH_FIELD = null;
@@ -201,6 +201,9 @@ public class SearchService {
         ret = search.w3SetHighlight(COLLECTION, 1, 1);
         ret = search.w3SetRanking(COLLECTION, "basic", "prkmfo", 1000);
         ret = search.w3SetQueryAnalyzer(COLLECTION, 1, 1, 1, 0);
+
+        if(!prefixQuery.isEmpty())
+            ret = search.w3SetPrefixQuery(COLLECTION, prefixQuery, 1);
 
         // request
         ret = search.w3ConnectServer(SERVER_IP, SERVER_PORT, SERVER_TIMEOUT);
@@ -244,8 +247,8 @@ public class SearchService {
         List<String> list = new ArrayList<>();
 
         list.add("TITLE");
-        list.add("POSTER_NAME");
         list.add("CONTENTS");
+        list.add("FILE_NAME");
         list.add("FILE_CONTENTS");
 
         return String.join(",", list);
@@ -295,8 +298,6 @@ public class SearchService {
         list.add("DOCREGNO");
         list.add("FILE_NAME");
         list.add("FILE_CONTENTS");
-        list.add("OWNERIDS");
-        list.add("FLDROWNERID");
 
         return String.join(",", list);
     }
