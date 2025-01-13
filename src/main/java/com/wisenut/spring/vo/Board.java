@@ -31,7 +31,6 @@ public class Board {
     private String brdType;
     private String readNotMember;
 
-
     static public SearchVo getSearchResult(Search search, String COLLECTION) {
 
         List<Board> list = new ArrayList<>();

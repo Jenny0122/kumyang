@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class Appr {
 
-    // 중분류명
     private String apprId;
     private String title;
     private String userNm;
