@@ -42,6 +42,8 @@ public class SearchService {
                                       .trim() + "/" + requestDTO.getSortDirection()
                                                                 .trim();
 
+        String dept = requestDTO.getDept();
+
         // 결과 내 재검색
         int requery = requestDTO.getRequery();
         String realquery = requestDTO.getRealquery();
@@ -72,6 +74,14 @@ public class SearchService {
         ret = search.w3SetCommonQuery(query, EXTEND_OR);
 
         StringBuilder prefixQueryBuilder = new StringBuilder();
+
+        // appr 권한 : USER의 부서ID
+        if (COLLECTION.contentEquals("appr") & !dept.isEmpty()) {
+            prefixQueryBuilder.append("<FLDROWNERID:contains:")
+                              .append(dept)
+                              .append(">")
+                              .append(" ");
+        }
 
         // 검색 영역 : 제목
         if (title) {

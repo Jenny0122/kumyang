@@ -28,6 +28,9 @@ public class TotalSearchRequestDTO {
     // 검색 결과 출력되는 위치
     private int pageStart;
 
+    // 권한 : 부서
+    private String dept;
+
     // 결과 내 재검색 여부 : 1이면 결과 내 재검색
     private int requery;
 

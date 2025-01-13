@@ -79,7 +79,7 @@ public class BrokerController {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        final String api = "/WNRun.do";
+        final String api = "/manager/WNRun.do";
         URI uri = UriComponentsBuilder.newInstance()
                                       .scheme(protocol)
                                       .host(host)
