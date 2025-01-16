@@ -18,10 +18,14 @@ public class SearchController {
     private final SearchService service;
 
     // 입력받은 검색어와 컬렉션 정보로 통합검색
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping(path = {"/search"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> retriveSearchList(@RequestBody @Valid TotalSearchRequestDTO requestDTO) {
 
+        log.debug("/search");
+        log.debug("request: {}", requestDTO);
         TotalSearchResponseDTO dto = service.run(requestDTO);
+
 
         return ResponseEntity.ok(dto);
     }

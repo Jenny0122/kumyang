@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -28,14 +29,20 @@ public class TotalSearchRequestDTO {
     // 검색 결과 출력되는 위치
     private int pageStart;
 
-    // 권한 : 부서
-    private String dept;
+    // 권한 : 부서ID
+    private String deptId;
 
     // 결과 내 재검색 여부 : 1이면 결과 내 재검색
     private int requery;
 
     // 결과 내 재검색하는 검색어
     private String realquery;
+
+    // 상세 검색 : 작성자
+    private String userNm;
+
+    // 상세 검색 : 부서
+    private String dept;
 
     // 검색 영역 : 제목
     private boolean title;
@@ -47,10 +54,10 @@ public class TotalSearchRequestDTO {
     private boolean file;
 
     // 검색 기간(시작)
-    private String modifyFrom;
+    private LocalDate modifyFrom;
 
     // 검색 기간(끝)
-    private String modifyTo;
+    private LocalDate modifyTo;
 
     // 한번에 출력되는 검색 건수
     private int count;
