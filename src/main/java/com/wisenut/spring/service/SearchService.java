@@ -98,9 +98,9 @@ public class SearchService {
         }
 
         if (dept != null && !dept.isEmpty()) {
-            if (apprCollectionQueryBuilder.length() > 0) apprCollectionQueryBuilder.append("<DEPT:contains:")
-                                                                                   .append(dept)
-                                                                                   .append(">");
+            apprCollectionQueryBuilder.append("<DEPT:contains:")
+                                     .append(dept)
+                                     .append(">");
             // dept 추가 시 공백 추가
             apprCollectionQueryBuilder.append(" ");
         }
@@ -167,7 +167,8 @@ public class SearchService {
                 break;
 
             case "board":
-                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, prefixQuery, boardCollectionQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), BOARD); dto.setBoard(boardSearch); break;
+                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, prefixQuery, boardCollectionQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), BOARD); dto.setBoard(boardSearch);
+                break;
 
             case "appr":
                 apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, prefixQuery, apprCollectionQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), APPR); dto.setAppr(apprSearch); break;
@@ -188,8 +189,10 @@ public class SearchService {
 
         // collection, 검색 필드, 출력 필드 설정
         ret = search.w3AddCollection(COLLECTION); ret = search.w3SetPageInfo(COLLECTION, PAGE_START, RESULT_COUNT);
-        ret = search.w3SetSortField(COLLECTION, SORT_FIELD); ret = search.w3SetSearchField(COLLECTION, SEARCH_FIELD);
-        ret = search.w3SetDocumentField(COLLECTION, DOCUMENT_FIELD); ret = search.w3SetHighlight(COLLECTION, 1, 1);
+        ret = search.w3SetSortField(COLLECTION, SORT_FIELD);
+        ret = search.w3SetSearchField(COLLECTION, SEARCH_FIELD);
+        ret = search.w3SetDocumentField(COLLECTION, DOCUMENT_FIELD);
+        ret = search.w3SetHighlight(COLLECTION, 1, 1);
         ret = search.w3SetRanking(COLLECTION, "basic", "prkmfo", 1000);
         ret = search.w3SetQueryAnalyzer(COLLECTION, 1, 1, 1, 0);
 

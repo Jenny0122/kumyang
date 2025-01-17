@@ -24,10 +24,10 @@ public class SearchController {
 
         log.debug("/search");
         log.debug("request: {}", requestDTO);
-        TotalSearchResponseDTO dto = service.run(requestDTO);
+        TotalSearchResponseDTO responseDTO = service.run(requestDTO);
 
-
-        return ResponseEntity.ok(dto);
+        log.debug("response: {}", responseDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
 }

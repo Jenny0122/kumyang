@@ -14,8 +14,10 @@ public class TotalSearchResponseDTO {
 
     String query;
 
-    SearchVo<Board> Board;
+    SearchVo<?> all;
 
-    SearchVo<Appr> Appr;
+    SearchVo<Board> board;
+
+    SearchVo<Appr> appr;
 
 }

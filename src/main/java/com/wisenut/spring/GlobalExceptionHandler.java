@@ -2,6 +2,7 @@ package com.wisenut.spring;
 
 import com.wisenut.spring.controller.BrokerController;
 import com.wisenut.spring.controller.SearchController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice(basePackageClasses = {SearchController.class, BrokerController.class})
 public class GlobalExceptionHandler {
 
@@ -32,6 +34,7 @@ public class GlobalExceptionHandler {
             else
                 data.put(fieldName, errorMessage);
         }
+        log.warn("Request body 에러: {}", data);
 
         return ResponseEntity
                 .badRequest()
@@ -42,9 +45,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<?> handleNullPointerException(NullPointerException e) {
         Map<String, String> data = new HashMap<>();
-        e.printStackTrace();
         data.put("message", "에러가 발생했습니다. 관리자에게 문의하세요.");
 
+        log.warn("NullPointerExcpetion...");
         return ResponseEntity.internalServerError()
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(data);
