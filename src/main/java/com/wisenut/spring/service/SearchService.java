@@ -38,25 +38,25 @@ public class SearchService {
 
         TotalSearchResponseDTO dto = new TotalSearchResponseDTO();
 
-        String query = requestDTO.getQuery()
-                                 .trim(); String COLLECTION = requestDTO.getCollection()
-                                                                        .trim();
-        String SORT_FIELD = requestDTO.getSortField()
-                                      .trim() + "/" + requestDTO.getSortDirection()
-                                                                .trim();
+        String query = requestDTO.getQuery();
+        String COLLECTION = requestDTO.getCollection();
+        String SORT_OPTION = requestDTO.getSortOption();
+
         // appr 권한 값(user의 deptId)
-        String deptId = requestDTO.getDept();
+        String deptId = requestDTO.getDeptId();
 
         // 결과 내 재검색
-        int requery = requestDTO.getRequery(); String realquery = requestDTO.getRealquery();
+        boolean requery = requestDTO.isRequery();
+        String realquery = requestDTO.getRealquery();
 
-        if (requery == 1) query += " " + realquery;
+        if (requery) query += " " + realquery;
+        dto.setQuery(query);
 
         // 상세검색 : 작성자
-        String userNm = requestDTO.getUserNm();
+        String userName = requestDTO.getUserName();
 
         // 상세검색 : 부서
-        String dept = requestDTO.getDept();
+        String department = requestDTO.getDepartment();
 
         // 상세검색 : 검색영억
         boolean title = requestDTO.isTitle(); //true
@@ -64,49 +64,49 @@ public class SearchService {
         boolean file = requestDTO.isFile(); //true
 
         // 상세검색 : 검색기간
-        LocalDate modifyFrom = requestDTO.getModifyFrom(); LocalDate modifyTo = requestDTO.getModifyTo();
+        LocalDate modifyFrom = requestDTO.getModifyFrom();
+        LocalDate modifyTo = requestDTO.getModifyTo();
 
         int RESULT_COUNT = requestDTO.getCount(); // 한번에 출력되는 검색 건수
         int PAGE_START = requestDTO.getPageStart(); // 검색결과 시작페이지
 
-        dto.setQuery(query);
+        Search search = new Search();
 
-        Search search = new Search(); int ret = 0;
+        int ret = 0;
 
         // common query 설정
-        ret = search.w3SetCodePage(ENCODE_VALUE); ret = search.w3SetQueryLog(QUERY_LOG);
+        ret = search.w3SetCodePage(ENCODE_VALUE);
+        ret = search.w3SetQueryLog(QUERY_LOG);
         ret = search.w3SetCommonQuery(query, EXTEND_OR);
 
-//        String apprUserNmCollectionQuery = (userNm != null && !userNm.isEmpty())
-//                ? "<USERNM:contains:" + userNm + ">" + (dept != null && !dept.isEmpty() ? " | <DEPT:contains:" + dept + ">" : "")
-//                : "";
-//        String boardUserNmCollectionQuery = !userNm.isEmpty() ? "<POSTER_NAME:contains:" + userNm + ">" : "";
-//
-//        log.debug(apprUserNmCollectionQuery);
 
         StringBuilder prefixQueryBuilder = new StringBuilder();
         StringBuilder apprCollectionQueryBuilder = new StringBuilder();
 
+        // 전자결재 권한
+        String apprPrefixQuery = deptId != null && !deptId.isEmpty() ? "<FLDROWNERID:contains:" + deptId + ">" : "";
+
+
         // 상세검색 : 전자결재(작성자 & 부서)
-        if (userNm != null && !userNm.isEmpty()) {
+        if (userName != null && !userName.isEmpty()) {
             apprCollectionQueryBuilder.append("<USERNM:contains:")
-                                      .append(userNm)
+                                      .append(userName)
                                       .append(">");
 
-            // userNm 추가 시 항상 공백 추가
+            // userName 추가 시 항상 공백 추가
             apprCollectionQueryBuilder.append(" ");
         }
 
-        if (dept != null && !dept.isEmpty()) {
+        if (department != null && !department.isEmpty()) {
             apprCollectionQueryBuilder.append("<DEPT:contains:")
-                                     .append(dept)
-                                     .append(">");
+                                      .append(department)
+                                      .append(">");
             // dept 추가 시 공백 추가
             apprCollectionQueryBuilder.append(" ");
         }
 
         // 상세검색 : 게시판(작성자)
-        String boardCollectionQuery = userNm != null && !userNm.isEmpty() ? "<POSTER_NAME:contains:" + userNm + ">" : "";
+        String boardCollectionQuery = userName != null && !userName.isEmpty() ? "<POSTER_NAME:contains:" + userName + ">" : "";
 
         // 검색 영역 : 제목
         if (title) {
@@ -143,35 +143,28 @@ public class SearchService {
                                                                .trim();
 
 
-        log.debug("prefix query: {}", prefixQuery); log.debug("appr Collection query: {}", apprCollectionQuery);
+        log.debug("prefix query: {}", prefixQuery);
+        log.debug("appr Collection query: {}", apprCollectionQuery);
         log.debug("board Collection query: {}", boardCollectionQuery);
-//LocalDate.now().format(null);
-        // 검색 기간 설정
-        if (modifyTo != null && modifyFrom != null) {
-//            ret = search.w3SetDateRange(COLLECTION,
-//                    modifyFrom.substring(0, 4) + "/" + modifyFrom.substring(4, 6) + "/" + modifyFrom.substring(6, 8),
-//                    modifyTo.substring(0, 4) + "/" + modifyTo.substring(4, 6) + "/" + modifyTo.substring(6, 8));
-            ret = search.w3SetDateRange(COLLECTION, modifyFrom.format(dateFormatter), modifyTo.format(dateFormatter));
-        }
 
-        SearchVo boardSearch = null; SearchVo apprSearch = null;
+        SearchVo boardSearch = null;
+        SearchVo apprSearch = null;
 
         String BOARD = "board"; String APPR = "appr";
 
         switch (COLLECTION) {
             case "ALL":
-                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, prefixQuery, boardCollectionQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), BOARD); dto.setBoard(boardSearch);
+                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, modifyFrom, modifyTo, prefixQuery, boardCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), BOARD); dto.setBoard(boardSearch);
 
-                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, prefixQuery, apprCollectionQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), APPR); dto.setAppr(apprSearch);
+                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, modifyFrom, modifyTo, prefixQuery, apprPrefixQuery, apprCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), APPR); dto.setAppr(apprSearch);
 
                 break;
 
             case "board":
-                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, prefixQuery, boardCollectionQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), BOARD); dto.setBoard(boardSearch);
-                break;
+                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, modifyFrom, modifyTo, prefixQuery, boardCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), BOARD); dto.setBoard(boardSearch); break;
 
             case "appr":
-                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, prefixQuery, apprCollectionQuery, SORT_FIELD, RESULT_COUNT, PAGE_START), APPR); dto.setAppr(apprSearch); break;
+                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, modifyFrom, modifyTo, prefixQuery, apprPrefixQuery, apprCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), APPR); dto.setAppr(apprSearch); break;
 
             default:
                 break;
@@ -180,15 +173,17 @@ public class SearchService {
         return dto;
     }
 
-    private Search searchBoard(Search search, String COLLECTION, String prefixQuery, String boardCollectionQuery, String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
+    private Search searchBoard(Search search, String COLLECTION, LocalDate modifyFrom, LocalDate modifyTo, String prefixQuery, String boardCollectionQuery, String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
 
-        int ret = 0; String SEARCH_FIELD = null; String DOCUMENT_FIELD = null;
+        int ret = 0; String SEARCH_FIELD = null;
+        String DOCUMENT_FIELD = null;
 
-        SEARCH_FIELD = getBoardSearchFieldList(); DOCUMENT_FIELD = getBoardDocumentFieldList();
-
+        SEARCH_FIELD = getBoardSearchFieldList();
+        DOCUMENT_FIELD = getBoardDocumentFieldList();
 
         // collection, 검색 필드, 출력 필드 설정
-        ret = search.w3AddCollection(COLLECTION); ret = search.w3SetPageInfo(COLLECTION, PAGE_START, RESULT_COUNT);
+        ret = search.w3AddCollection(COLLECTION);
+        ret = search.w3SetPageInfo(COLLECTION, PAGE_START, RESULT_COUNT);
         ret = search.w3SetSortField(COLLECTION, SORT_FIELD);
         ret = search.w3SetSearchField(COLLECTION, SEARCH_FIELD);
         ret = search.w3SetDocumentField(COLLECTION, DOCUMENT_FIELD);
@@ -196,9 +191,14 @@ public class SearchService {
         ret = search.w3SetRanking(COLLECTION, "basic", "prkmfo", 1000);
         ret = search.w3SetQueryAnalyzer(COLLECTION, 1, 1, 1, 0);
 
-        if (!prefixQuery.isEmpty()) ret = search.w3SetPrefixQuery(COLLECTION, prefixQuery, 1);
+        if (!prefixQuery.isEmpty())
+            ret = search.w3SetPrefixQuery(COLLECTION, prefixQuery, 1);
 
-        if (!boardCollectionQuery.isEmpty()) ret = search.w3SetCollectionQuery(COLLECTION, boardCollectionQuery);
+        if (!boardCollectionQuery.isEmpty())
+            ret = search.w3SetCollectionQuery(COLLECTION, boardCollectionQuery);
+
+        if(modifyFrom != null && modifyTo != null)
+            ret = search.w3SetDateRange(COLLECTION, modifyFrom.format(dateFormatter), modifyTo.format(dateFormatter));
 
         // request
         ret = search.w3ConnectServer(SERVER_IP, SERVER_PORT, SERVER_TIMEOUT);
@@ -206,29 +206,41 @@ public class SearchService {
 
         // check error
         if (search.w3GetError() != 0) {
-            log.debug("board 검색 오류 로그 : {}", search.w3GetErrorInfo()); return null;
+            log.debug("board 검색 오류 로그 : {}", search.w3GetErrorInfo());
+            return null;
         }
 
         return search;
 
     }
 
-    private Search searchAppr(Search search, String COLLECTION, String prefixQuery, String apprCollectionQuery, String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
+    private Search searchAppr(Search search, String COLLECTION, LocalDate modifyFrom, LocalDate modifyTo, String prefixQuery, String apprPrefixQuery, String apprCollectionQuery, String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
 
-        int ret = 0; String SEARCH_FIELD = null; String DOCUMENT_FIELD = null;
 
-        SEARCH_FIELD = getApprSearchFieldList(); DOCUMENT_FIELD = getApprDocumentFieldList();
+        int ret = 0; String SEARCH_FIELD = null;
+        String DOCUMENT_FIELD = null;
+
+        SEARCH_FIELD = getApprSearchFieldList();
+        DOCUMENT_FIELD = getApprDocumentFieldList();
 
         // collection, 검색 필드, 출력 필드 설정
-        ret = search.w3AddCollection(COLLECTION); ret = search.w3SetPageInfo(COLLECTION, PAGE_START, RESULT_COUNT);
-        ret = search.w3SetSortField(COLLECTION, SORT_FIELD); ret = search.w3SetSearchField(COLLECTION, SEARCH_FIELD);
-        ret = search.w3SetDocumentField(COLLECTION, DOCUMENT_FIELD); ret = search.w3SetHighlight(COLLECTION, 1, 1);
+        ret = search.w3AddCollection(COLLECTION);
+        ret = search.w3SetPageInfo(COLLECTION, PAGE_START, RESULT_COUNT);
+        ret = search.w3SetSortField(COLLECTION, SORT_FIELD);
+        ret = search.w3SetSearchField(COLLECTION, SEARCH_FIELD);
+        ret = search.w3SetDocumentField(COLLECTION, DOCUMENT_FIELD);
+        ret = search.w3SetHighlight(COLLECTION, 1, 1);
         ret = search.w3SetRanking(COLLECTION, "basic", "prkmfo", 1000);
         ret = search.w3SetQueryAnalyzer(COLLECTION, 1, 1, 1, 0);
 
-        if (!prefixQuery.isEmpty()) ret = search.w3SetPrefixQuery(COLLECTION, prefixQuery, 1);
+        if (!prefixQuery.isEmpty() || !apprPrefixQuery.isEmpty())
+            ret = search.w3SetPrefixQuery(COLLECTION, prefixQuery+ " " + apprPrefixQuery, 1);
 
-        if (!apprCollectionQuery.isEmpty()) ret = search.w3SetCollectionQuery(COLLECTION, apprCollectionQuery);
+        if (!apprCollectionQuery.isEmpty())
+            ret = search.w3SetCollectionQuery(COLLECTION, apprCollectionQuery);
+
+        if(modifyFrom != null && modifyTo != null)
+            ret = search.w3SetDateRange(COLLECTION, modifyFrom.format(dateFormatter), modifyTo.format(dateFormatter));
 
         // request
         ret = search.w3ConnectServer(SERVER_IP, SERVER_PORT, SERVER_TIMEOUT);
@@ -236,17 +248,23 @@ public class SearchService {
 
         // check error
         if (search.w3GetError() != 0) {
-            log.debug("appr 검색 오류 로그 : {}", search.w3GetErrorInfo()); return null;
+            log.debug("appr 검색 오류 로그 : {}", search.w3GetErrorInfo());
+            return null;
         } return search;
     }
 
     private String getBoardDocumentFieldList() {
         List<String> list = new ArrayList<>();
 
-        list.add("DOCID"); list.add("DATE"); list.add("TITLE"); list.add("POSTER_ID"); list.add("POSTER_NAME");
-        list.add("CONTENTS"); list.add("ATT_CNT"); list.add("FILE_NAME"); list.add("ATT_EXTS"); list.add("ATT_ORDS");
-        list.add("FILE_CONTENTS"); list.add("BRD_ID"); list.add("MODIFY_DATE"); list.add("COMMENT_NUM");
-        list.add("BRDFULLPATH"); list.add("BRD_TYPE"); list.add("READNOTMEMBER");
+        list.add("DOCID"); list.add("DATE");
+        list.add("TITLE"); list.add("POSTER_ID");
+        list.add("POSTER_NAME"); list.add("CONTENTS");
+        list.add("ATT_CNT"); list.add("FILE_NAME");
+        list.add("ATT_EXTS"); list.add("ATT_ORDS");
+        list.add("FILE_CONTENTS"); list.add("BRD_ID");
+        list.add("MODIFY_DATE"); list.add("COMMENT_NUM");
+        list.add("BRDFULLPATH"); list.add("BRD_TYPE");
+        list.add("READNOTMEMBER");
 
         return String.join(",", list);
     }
@@ -254,7 +272,8 @@ public class SearchService {
     private String getBoardSearchFieldList() {
         List<String> list = new ArrayList<>();
 
-        list.add("TITLE"); list.add("CONTENTS"); list.add("FILE_NAME"); list.add("FILE_CONTENTS");
+        list.add("TITLE"); list.add("CONTENTS");
+        list.add("FILE_NAME"); list.add("FILE_CONTENTS");
 
         return String.join(",", list);
     }
@@ -262,21 +281,32 @@ public class SearchService {
     private String getApprDocumentFieldList() {
         List<String> list = new ArrayList<>();
 
-        list.add("DOCID"); list.add("DATE"); list.add("APPRID"); list.add("TITLE"); list.add("USERNM");
-        list.add("CONTENTS"); list.add("DEPT"); list.add("DOCREGNO"); list.add("APPROVALDATE");
-        list.add("APPROVALTYPE"); list.add("APPROVALSTATUS"); list.add("WORDTYPE"); list.add("EXTERNALDOC");
-        list.add("EXTERNALDOCTYPE"); list.add("ATTACHCOUNT"); list.add("ISSECURITY"); list.add("SUMMARYDOC");
-        list.add("HASOPINION"); list.add("DOCTYPE"); list.add("FILE_NAME"); list.add("FILE_EXTS");
-        list.add("FILE_CONTENTS"); list.add("FILE_ID"); list.add("UPDATEDATE"); list.add("OWNERIDS");
-        list.add("FLDROWNERID"); list.add("FLDROWNERNAME");
+        list.add("DOCID"); list.add("DATE");
+        list.add("APPRID"); list.add("TITLE");
+        list.add("USERNM"); list.add("CONTENTS");
+        list.add("DEPT"); list.add("DOCREGNO");
+        list.add("APPROVALDATE"); list.add("APPROVALTYPE");
+        list.add("APPROVALSTATUS"); list.add("WORDTYPE");
+        list.add("EXTERNALDOC");
+        list.add("EXTERNALDOCTYPE");
+        list.add("ATTACHCOUNT"); list.add("ISSECURITY");
+        list.add("SUMMARYDOC"); list.add("HASOPINION");
+        list.add("DOCTYPE"); list.add("FILE_NAME");
+        list.add("FILE_EXTS"); list.add("FILE_CONTENTS");
+        list.add("FILE_ID"); list.add("UPDATEDATE");
+        list.add("OWNERIDS"); list.add("FLDROWNERID");
+        list.add("FLDROWNERNAME");
 
         return String.join(",", list);
     }
 
     private String getApprSearchFieldList() {
 
-        List<String> list = new ArrayList<>(); list.add("TITLE"); list.add("USERNM"); list.add("CONTENTS");
-        list.add("DEPT"); list.add("DOCREGNO"); list.add("FILE_NAME"); list.add("FILE_CONTENTS");
+        List<String> list = new ArrayList<>();
+        list.add("TITLE"); list.add("USERNM");
+        list.add("CONTENTS"); list.add("DEPT");
+        list.add("DOCREGNO"); list.add("FILE_NAME");
+        list.add("FILE_CONTENTS");
 
         return String.join(",", list);
     }

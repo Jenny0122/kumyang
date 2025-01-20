@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -13,18 +14,16 @@ import java.time.LocalDate;
 public class TotalSearchRequestDTO {
 
     // 검색어
-    @NotNull(message = "검색어는 '필수'값입니다.")
+    @NotBlank(message = "검색어는 '필수'값입니다.")
     private String query;
 
     // 컬렉션
-    @NotNull(message = "collection은 '필수'값 입니다.")
+    @NotBlank(message = "collection은 '필수'값 입니다.")
     private String collection;
 
     // 정렬 필드 : DATE or RANK
-    private String sortField;
-
-    // 정렬 방식 : ASC or DESC
-    private String sortDirection;
+    @NotBlank(message = "정렬은 '필수'값 입니다.")
+    private String sortOption;
 
     // 검색 결과 출력되는 위치
     private int pageStart;
@@ -32,17 +31,17 @@ public class TotalSearchRequestDTO {
     // 권한 : 부서ID
     private String deptId;
 
-    // 결과 내 재검색 여부 : 1이면 결과 내 재검색
-    private int requery;
+    // 결과 내 재검색 여부
+    private boolean requery;
 
     // 결과 내 재검색하는 검색어
     private String realquery;
 
     // 상세 검색 : 작성자
-    private String userNm;
+    private String userName;
 
     // 상세 검색 : 부서
-    private String dept;
+    private String department;
 
     // 검색 영역 : 제목
     private boolean title;
@@ -65,7 +64,5 @@ public class TotalSearchRequestDTO {
     public TotalSearchRequestDTO() {
         pageStart = 0;
         count = 10;
-        sortField = "RANK";
-        sortDirection = "DESC";
     }
 }
