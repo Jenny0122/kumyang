@@ -18,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Board {
 
+    private String headerId;
     private String title;
     private String posterId;
     private String posterName;
@@ -49,7 +50,7 @@ public class Board {
         for (int i = 0; i < resultCount; i++) {
 
             // 기본 검색결과 객체 생성
-
+            String headerId = search.w3GetField(COLLECTION, "HEADER_ID", i);
             String title = search.w3GetField(COLLECTION, "TITLE", i)
                                  .replaceAll("<!HS>", "<font color=red>")
                                  .replaceAll("<!HE>", "</font>");
@@ -73,6 +74,7 @@ public class Board {
             String readNotMember = search.w3GetField(COLLECTION, "READNOTMEMBER", i);
 
             Board vo = Board.builder()
+                            .headerId(headerId)
                             .title(title)
                             .posterId(posterId)
                             .posterName(posterName)

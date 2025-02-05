@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -35,7 +36,7 @@ public class TotalSearchRequestDTO {
     private boolean requery;
 
     // 결과 내 재검색하는 검색어
-    private String realquery;
+    private List<String> realquery;
 
     // 상세 검색 : 작성자
     private String userName;
@@ -60,6 +61,9 @@ public class TotalSearchRequestDTO {
 
     // 한번에 출력되는 검색 건수
     private int count;
+
+    // AND/OR 검색
+    private List<SearchCondition> searchConditions;
 
     public TotalSearchRequestDTO() {
         pageStart = 0;

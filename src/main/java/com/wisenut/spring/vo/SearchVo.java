@@ -6,7 +6,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @Builder
@@ -22,5 +21,10 @@ public class SearchVo<T> { // 통합 검색 필드 정보
     private int count = 0;
 
     private List<T> result;
+
+    @Override
+    public String toString() {
+        return "SearchVo{" + "collection='" + collection + '\'' + ", totalCount=" + totalCount + ", count=" + count + ", result=[.....]}";
+    }
 }
 

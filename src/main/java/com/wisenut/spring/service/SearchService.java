@@ -1,6 +1,8 @@
 package com.wisenut.spring.service;
 
 import QueryAPI530.Search;
+import com.wisenut.spring.dto.Condition;
+import com.wisenut.spring.dto.SearchCondition;
 import com.wisenut.spring.dto.TotalSearchRequestDTO;
 import com.wisenut.spring.dto.TotalSearchResponseDTO;
 import com.wisenut.spring.vo.*;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,12 +35,11 @@ public class SearchService {
     @Value("${wise.sf1.serverIp}")
     String SERVER_IP;
 
-    final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("YYYY/MM/DD");
+    final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     public TotalSearchResponseDTO run(TotalSearchRequestDTO requestDTO) {
 
         TotalSearchResponseDTO dto = new TotalSearchResponseDTO();
-
         String query = requestDTO.getQuery();
         String COLLECTION = requestDTO.getCollection();
         String SORT_OPTION = requestDTO.getSortOption();
@@ -47,10 +49,10 @@ public class SearchService {
 
         // 결과 내 재검색
         boolean requery = requestDTO.isRequery();
-        String realquery = requestDTO.getRealquery();
+        List<String> realquery = requestDTO.getRealquery();
 
-        if (requery) query += " " + realquery;
-        dto.setQuery(query);
+        // 상세검색: AND/OR
+        List<SearchCondition> searchConditions = requestDTO.getSearchConditions();
 
         // 상세검색 : 작성자
         String userName = requestDTO.getUserName();
@@ -66,22 +68,41 @@ public class SearchService {
         // 상세검색 : 검색기간
         LocalDate modifyFrom = requestDTO.getModifyFrom();
         LocalDate modifyTo = requestDTO.getModifyTo();
-
         int RESULT_COUNT = requestDTO.getCount(); // 한번에 출력되는 검색 건수
-        int PAGE_START = requestDTO.getPageStart(); // 검색결과 시작페이지
+        int PAGE_START = requestDTO.getPageStart() * RESULT_COUNT; // 검색결과 시작페이지
+
+        dto.setQuery(query);
 
         Search search = new Search();
 
         int ret = 0;
 
+        StringBuilder mainQueryBuilder = new StringBuilder();
+        StringBuilder prefixQueryBuilder = new StringBuilder();
+        StringBuilder apprCollectionQueryBuilder = new StringBuilder();
+
+        // 검색어를 query builder에 추가
+        mainQueryBuilder.append(query);
+
+        // 결과내 재검색이면 query builder에 추가
+        if (requery)
+            realquery.forEach(item -> mainQueryBuilder.append(" ")
+                                                      .append(item));
+        // AND/OR 상세검색 정보를 query에 추가
+        searchConditions.stream()
+                        .filter(item -> !item.getKeyword()
+                                             .contentEquals(""))
+                        .forEach(item -> mainQueryBuilder.append(item.getCondition() == Condition.AND ? " " : "|")
+                                                         .append(item.getKeyword()));
+
+
+        log.debug("request query: {}", mainQueryBuilder.toString());
+
         // common query 설정
         ret = search.w3SetCodePage(ENCODE_VALUE);
         ret = search.w3SetQueryLog(QUERY_LOG);
-        ret = search.w3SetCommonQuery(query, EXTEND_OR);
+        ret = search.w3SetCommonQuery(mainQueryBuilder.toString(), EXTEND_OR);
 
-
-        StringBuilder prefixQueryBuilder = new StringBuilder();
-        StringBuilder apprCollectionQueryBuilder = new StringBuilder();
 
         // 전자결재 권한
         String apprPrefixQuery = deptId != null && !deptId.isEmpty() ? "<FLDROWNERID:contains:" + deptId + ">" : "";
@@ -89,7 +110,7 @@ public class SearchService {
 
         // 상세검색 : 전자결재(작성자 & 부서)
         if (userName != null && !userName.isEmpty()) {
-            apprCollectionQueryBuilder.append("<USERNM:contains:")
+            apprCollectionQueryBuilder.append("<USERNM_EX:contains:")
                                       .append(userName)
                                       .append(">");
 
@@ -98,7 +119,7 @@ public class SearchService {
         }
 
         if (department != null && !department.isEmpty()) {
-            apprCollectionQueryBuilder.append("<DEPT:contains:")
+            apprCollectionQueryBuilder.append("<DEPT_EX:contains:")
                                       .append(department)
                                       .append(">");
             // dept 추가 시 공백 추가
@@ -173,7 +194,7 @@ public class SearchService {
         return dto;
     }
 
-    private Search searchBoard(Search search, String COLLECTION, LocalDate modifyFrom, LocalDate modifyTo, String prefixQuery, String boardCollectionQuery, String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
+    private Search searchBoard(Search search, String COLLECTION, LocalDate modifyFrom, LocalDate modifyTo, String prefixQuery, String boardCollectionQuery, String SORT_OPTION, int RESULT_COUNT, int PAGE_START) {
 
         int ret = 0; String SEARCH_FIELD = null;
         String DOCUMENT_FIELD = null;
@@ -184,7 +205,7 @@ public class SearchService {
         // collection, 검색 필드, 출력 필드 설정
         ret = search.w3AddCollection(COLLECTION);
         ret = search.w3SetPageInfo(COLLECTION, PAGE_START, RESULT_COUNT);
-        ret = search.w3SetSortField(COLLECTION, SORT_FIELD);
+        ret = search.w3SetSortField(COLLECTION, SORT_OPTION);
         ret = search.w3SetSearchField(COLLECTION, SEARCH_FIELD);
         ret = search.w3SetDocumentField(COLLECTION, DOCUMENT_FIELD);
         ret = search.w3SetHighlight(COLLECTION, 1, 1);
@@ -197,7 +218,7 @@ public class SearchService {
         if (!boardCollectionQuery.isEmpty())
             ret = search.w3SetCollectionQuery(COLLECTION, boardCollectionQuery);
 
-        if(modifyFrom != null && modifyTo != null)
+        if (modifyFrom != null && modifyTo != null)
             ret = search.w3SetDateRange(COLLECTION, modifyFrom.format(dateFormatter), modifyTo.format(dateFormatter));
 
         // request
@@ -214,7 +235,7 @@ public class SearchService {
 
     }
 
-    private Search searchAppr(Search search, String COLLECTION, LocalDate modifyFrom, LocalDate modifyTo, String prefixQuery, String apprPrefixQuery, String apprCollectionQuery, String SORT_FIELD, int RESULT_COUNT, int PAGE_START) {
+    private Search searchAppr(Search search, String COLLECTION, LocalDate modifyFrom, LocalDate modifyTo, String prefixQuery, String apprPrefixQuery, String apprCollectionQuery, String SORT_OPTION, int RESULT_COUNT, int PAGE_START) {
 
 
         int ret = 0; String SEARCH_FIELD = null;
@@ -226,7 +247,7 @@ public class SearchService {
         // collection, 검색 필드, 출력 필드 설정
         ret = search.w3AddCollection(COLLECTION);
         ret = search.w3SetPageInfo(COLLECTION, PAGE_START, RESULT_COUNT);
-        ret = search.w3SetSortField(COLLECTION, SORT_FIELD);
+        ret = search.w3SetSortField(COLLECTION, SORT_OPTION);
         ret = search.w3SetSearchField(COLLECTION, SEARCH_FIELD);
         ret = search.w3SetDocumentField(COLLECTION, DOCUMENT_FIELD);
         ret = search.w3SetHighlight(COLLECTION, 1, 1);
@@ -234,12 +255,12 @@ public class SearchService {
         ret = search.w3SetQueryAnalyzer(COLLECTION, 1, 1, 1, 0);
 
         if (!prefixQuery.isEmpty() || !apprPrefixQuery.isEmpty())
-            ret = search.w3SetPrefixQuery(COLLECTION, prefixQuery+ " " + apprPrefixQuery, 1);
+            ret = search.w3SetPrefixQuery(COLLECTION, prefixQuery + " " + apprPrefixQuery, 1);
 
         if (!apprCollectionQuery.isEmpty())
             ret = search.w3SetCollectionQuery(COLLECTION, apprCollectionQuery);
 
-        if(modifyFrom != null && modifyTo != null)
+        if (modifyFrom != null && modifyTo != null)
             ret = search.w3SetDateRange(COLLECTION, modifyFrom.format(dateFormatter), modifyTo.format(dateFormatter));
 
         // request
@@ -257,14 +278,14 @@ public class SearchService {
         List<String> list = new ArrayList<>();
 
         list.add("DOCID"); list.add("DATE");
-        list.add("TITLE"); list.add("POSTER_ID");
-        list.add("POSTER_NAME"); list.add("CONTENTS");
-        list.add("ATT_CNT"); list.add("FILE_NAME");
-        list.add("ATT_EXTS"); list.add("ATT_ORDS");
-        list.add("FILE_CONTENTS"); list.add("BRD_ID");
-        list.add("MODIFY_DATE"); list.add("COMMENT_NUM");
-        list.add("BRDFULLPATH"); list.add("BRD_TYPE");
-        list.add("READNOTMEMBER");
+        list.add("HEADER_ID"); list.add("TITLE");
+        list.add("POSTER_ID"); list.add("POSTER_NAME");
+        list.add("CONTENTS"); list.add("ATT_CNT");
+        list.add("FILE_NAME"); list.add("ATT_EXTS");
+        list.add("ATT_ORDS"); list.add("FILE_CONTENTS");
+        list.add("BRD_ID"); list.add("MODIFY_DATE");
+        list.add("COMMENT_NUM"); list.add("BRDFULLPATH");
+        list.add("BRD_TYPE"); list.add("READNOTMEMBER");
 
         return String.join(",", list);
     }
