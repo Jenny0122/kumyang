@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="kumyang:war" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="afc1368b-cdf5-4bd4-b41a-06672cbeb249" name="변경" comment="권한 필드 추가 및 DateRange 수정">
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jpa-buddy.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/dto/Condition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/dto/SearchCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/controller/SearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/controller/SearchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/dto/TotalSearchRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/dto/TotalSearchRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/service/SearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/service/SearchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/vo/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/vo/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/vo/SearchVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wisenut/spring/vo/SearchVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-dev.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-prod.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+    </list>
+    <list id="84fb712d-7f7f-4e3e-9a0e-18bcd39439ac" name="kskcj 님이 변경한 내용" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Enum" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+  </component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2rKbawkuxY9DNFndGPNCtWT0ODb" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.KumYangSearchApplication.executor&quot;: &quot;Run&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/kumYang/target&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDK&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Java&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.wisenut.spring.dto" />
+      <recent name="com.wisenut.spring" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\kumYang\src\main\resources" />
+      <recent name="D:\kumYang\src\main\java\com\wisenut\spring\dto" />
+      <recent name="D:\gumYang\src\main" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.wisenut.spring.vo" />
+      <recent name="com.wisenut.spring" />
+      <recent name="com.wisenut.spring.controller" />
+      <recent name="" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="KumYangSearchApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ACTIVE_PROFILES" value="local" />
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="kumyang" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.wisenut.spring.KumYangSearchApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-1.8.0_402-corretto-1.8.0_402-4caba194b151-ae57be32" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="afc1368b-cdf5-4bd4-b41a-06672cbeb249" name="변경" comment="" />
+      <created>1736310782955</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1736310782955</updated>
+      <workItem from="1736310784617" duration="239000" />
+      <workItem from="1736311066534" duration="6293000" />
+      <workItem from="1736317739014" duration="2227000" />
+      <workItem from="1736381005872" duration="36030000" />
+      <workItem from="1736726582576" duration="2441000" />
+      <workItem from="1736729240660" duration="14118000" />
+      <workItem from="1736773468537" duration="3375000" />
+      <workItem from="1736820048671" duration="4519000" />
+      <workItem from="1736841851644" duration="2933000" />
+      <workItem from="1736903612244" duration="2112000" />
+      <workItem from="1736987223395" duration="18942000" />
+      <workItem from="1737077043923" duration="5428000" />
+      <workItem from="1737091869484" duration="23672000" />
+      <workItem from="1737336705797" duration="114000" />
+      <workItem from="1737337006718" duration="8808000" />
+      <workItem from="1737423114610" duration="14919000" />
+      <workItem from="1737629046532" duration="3659000" />
+      <workItem from="1737714748864" duration="3056000" />
+      <workItem from="1737887448125" duration="6899000" />
+      <workItem from="1738571899381" duration="11000" />
+      <workItem from="1738572206130" duration="2442000" />
+      <workItem from="1738627522462" duration="12117000" />
+      <workItem from="1738714006725" duration="9104000" />
+    </task>
+    <task id="LOCAL-00001" summary="새 프로젝트 생성">
+      <option name="closed" value="true" />
+      <created>1736317903230</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1736317903230</updated>
+    </task>
+    <task id="LOCAL-00002" summary="config 및 컬렉션 설정">
+      <option name="closed" value="true" />
+      <created>1736482846177</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1736482846178</updated>
+    </task>
+    <task id="LOCAL-00003" summary="service, properties 추가">
+      <option name="closed" value="true" />
+      <created>1736738125757</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1736738125757</updated>
+    </task>
+    <task id="LOCAL-00004" summary="service, properties 추가">
+      <option name="closed" value="true" />
+      <created>1736738164725</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1736738164725</updated>
+    </task>
+    <task id="LOCAL-00005" summary="인기검색어 url, 권한 prefix 수정">
+      <option name="closed" value="true" />
+      <created>1736747929173</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1736747929173</updated>
+    </task>
+    <task id="LOCAL-00006" summary="API 수정">
+      <option name="closed" value="true" />
+      <created>1737018001770</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1737018001770</updated>
+    </task>
+    <task id="LOCAL-00007" summary="검색 결과 필드에 date 추가">
+      <option name="closed" value="true" />
+      <created>1737104104183</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1737104104183</updated>
+    </task>
+    <task id="LOCAL-00008" summary="권한 필드 추가 및 DateRange 수정">
+      <option name="closed" value="true" />
+      <created>1737333534168</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1737333534168</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="새 프로젝트 생성" />
+    <MESSAGE value="config 및 컬렉션 설정" />
+    <MESSAGE value="service, properties 추가" />
+    <MESSAGE value="인기검색어 url, 권한 prefix 수정" />
+    <MESSAGE value="API 수정" />
+    <MESSAGE value="검색 결과 필드에 date 추가" />
+    <MESSAGE value="권한 필드 추가 및 DateRange 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="권한 필드 추가 및 DateRange 수정" />
+  </component>
+</project>
