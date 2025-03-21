@@ -20,11 +20,13 @@ public class SearchVo<T> { // 통합 검색 필드 정보
     @Builder.Default
     private int count = 0;
 
-    private List<T> result;
+    @Builder.Default
+    private int pageStart = 0;
 
+    private List<T> result;
     @Override
     public String toString() {
-        return "SearchVo{" + "collection='" + collection + '\'' + ", totalCount=" + totalCount + ", count=" + count + ", result=[.....]}";
+        return "SearchVo{" + "collection='" + collection + '\'' + ", totalCount=" + totalCount + ", pageStart=" + pageStart + ", count=" + count + ", result=[.....]}";
     }
 }
 

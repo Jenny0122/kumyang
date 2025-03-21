@@ -1,4 +1,4 @@
-package com.wisenut.spring.dto;
+package com.wisenut.spring.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

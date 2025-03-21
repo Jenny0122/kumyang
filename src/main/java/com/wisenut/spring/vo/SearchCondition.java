@@ -1,9 +1,8 @@
-package com.wisenut.spring.dto;
+package com.wisenut.spring.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 @Builder

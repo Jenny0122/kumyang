@@ -22,7 +22,6 @@ public class BrokerController {
     final int port = 7800;
 
     final String host = "165.213.0.11"; // 개발
-//    final String host = "10.80.1.194"; // 운영
     // 입력받은 검색어와 정렬정보로 자동완성
     @RequestMapping(value = "/recommend", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Object> retriveRecommendword(@RequestParam(name = "target") String target,

@@ -1,8 +1,8 @@
 package com.wisenut.spring.service;
 
 import QueryAPI530.Search;
-import com.wisenut.spring.dto.Condition;
-import com.wisenut.spring.dto.SearchCondition;
+import com.wisenut.spring.vo.Condition;
+import com.wisenut.spring.vo.SearchCondition;
 import com.wisenut.spring.dto.TotalSearchRequestDTO;
 import com.wisenut.spring.dto.TotalSearchResponseDTO;
 import com.wisenut.spring.vo.*;
@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -165,27 +164,39 @@ public class SearchService {
 
 
         log.debug("prefix query: {}", prefixQuery);
+        log.debug("appr Prefix query: {}", apprPrefixQuery);
         log.debug("appr Collection query: {}", apprCollectionQuery);
         log.debug("board Collection query: {}", boardCollectionQuery);
 
         SearchVo boardSearch = null;
         SearchVo apprSearch = null;
 
-        String BOARD = "board"; String APPR = "appr";
+        String BOARD = "board";
+        String APPR = "appr";
 
         switch (COLLECTION) {
             case "ALL":
-                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, modifyFrom, modifyTo, prefixQuery, boardCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), BOARD); dto.setBoard(boardSearch);
+                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, modifyFrom, modifyTo, prefixQuery, boardCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), BOARD);
+                boardSearch.setPageStart(requestDTO.getPageStart());
+                dto.setBoard(boardSearch);
 
-                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, modifyFrom, modifyTo, prefixQuery, apprPrefixQuery, apprCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), APPR); dto.setAppr(apprSearch);
+                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, modifyFrom, modifyTo, prefixQuery, apprPrefixQuery, apprCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), APPR);
+                apprSearch.setPageStart(requestDTO.getPageStart());
+                dto.setAppr(apprSearch);
 
                 break;
 
             case "board":
-                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, modifyFrom, modifyTo, prefixQuery, boardCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), BOARD); dto.setBoard(boardSearch); break;
+                boardSearch = Board.getSearchResult(this.searchBoard(search, BOARD, modifyFrom, modifyTo, prefixQuery, boardCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), BOARD);
+                boardSearch.setPageStart(requestDTO.getPageStart());
+                dto.setBoard(boardSearch);
+                break;
 
             case "appr":
-                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, modifyFrom, modifyTo, prefixQuery, apprPrefixQuery, apprCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), APPR); dto.setAppr(apprSearch); break;
+                apprSearch = Appr.getSearchResult(this.searchAppr(search, APPR, modifyFrom, modifyTo, prefixQuery, apprPrefixQuery, apprCollectionQuery, SORT_OPTION, RESULT_COUNT, PAGE_START), APPR);
+                apprSearch.setPageStart(requestDTO.getPageStart());
+                dto.setAppr(apprSearch);
+                break;
 
             default:
                 break;
